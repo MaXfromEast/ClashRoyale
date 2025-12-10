@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(UnitParameters), typeof(Health))]
+[RequireComponent(typeof(UnitParameters), typeof(Health), typeof(UnitAnimation))]
 public class Unit : MonoBehaviour, IHealth, IDestroyed
 {
     [SerializeField] private UnitParameters unitParameters;
@@ -31,20 +31,26 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
         }
     }
 
+    [SerializeField] private UnitAnimation unitAnimation;
+
     [SerializeField] private UnitState defaultStateSO;
     [SerializeField] private UnitState chaseStateSO;
+    [SerializeField] private UnitState prepareStateSO;
     [SerializeField] private UnitState attackStateSO;
-
+    private TargetFinder targetFinder;
     private UnitState defaultState;
     private UnitState chaseState;
+    private UnitState prepareState;
     private UnitState attackState;
 
     private UnitState currentState;
 
     private void Start()
     {
+        targetFinder = GetComponent<TargetFinder>();
+        targetFinder.Init();
         CreateStates();
-
+        unitAnimation.Init(this);
         currentState = defaultState;
         currentState.Init();
 
@@ -58,6 +64,9 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
 
         chaseState = Instantiate(chaseStateSO);
         chaseState.Constructor(this);
+
+        prepareState = Instantiate(prepareStateSO);
+        prepareState.Constructor(this);
 
         attackState = Instantiate(attackStateSO);
         attackState.Constructor(this);
@@ -79,7 +88,11 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
                 break;
             case UnitStateType.Chase:
                 currentState = chaseState;
-                Debug.Log("Состояние Case");
+                Debug.Log("Состояние Chase");
+                break;
+            case UnitStateType.Prepare:
+                currentState = prepareState;
+                Debug.Log("Состояние Prepare");
                 break;
             case UnitStateType.Attack:
                 currentState = attackState;
@@ -91,8 +104,9 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
 
         }
         currentState.Init();
+        unitAnimation.SetState(type);
     }
-
+   
     public event Action destroyed;
 
     private void CheckDestroy(int currentHP)

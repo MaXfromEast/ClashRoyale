@@ -57,7 +57,7 @@ public class MapInfo : MonoBehaviour
     }
 
 
-    private void AddUnit(Unit unit)
+    public void AddUnit(Unit unit)
     {
         List<Unit> list;
         if(unit.IsEnemy)
@@ -98,7 +98,7 @@ public class MapInfo : MonoBehaviour
     {
         Unit walking = TryGetNearestWalkingUnit(currentPosition, enemy, out float walkingDistance);
         Unit fly = TryGetNearestFlyUnit(currentPosition, enemy,  out float flyDistance);
-        Unit unit = new Unit();
+        Unit unit;
         if (flyDistance < walkingDistance)
         {
             unit = fly;

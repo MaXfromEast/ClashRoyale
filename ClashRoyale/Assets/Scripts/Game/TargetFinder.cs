@@ -12,7 +12,8 @@ public class TargetFinder : MonoBehaviour
     private Unit thisUnit;
     private Transform thisUnitTransform;
     private bool targetIsEnemy;
-    private void Start()
+    
+    public void Init()
     {
         thisUnit = GetComponent<Unit>();
         thisUnitTransform = thisUnit.transform;
@@ -55,17 +56,27 @@ public class TargetFinder : MonoBehaviour
         else
         {
             nearestUnit = null;
+            distanceToUnit = float.MaxValue;
         }
         return nearestUnit;
     }
 
-    public Unit GetTargetUnit()
+    public Unit GetTargetUnit(out float disToThePointOfAttack)
     {
+        if (nearestUnit != null)
+        {
+            disToThePointOfAttack = this.distanceToUnit - nearestUnit.UnitParameters.ModelRadius;
+        }
+        else
+        {
+            disToThePointOfAttack = this.distanceToUnit;
+        }
         return nearestUnit;
     }
 
-    public Tower GetTargetTower()
+    public Tower GetTargetTower(out float disToThePointOfAttack)
     {
+        disToThePointOfAttack = this.distanceToTower - nearestTower.TowerRadius;
         return nearestTower;
     }
 
@@ -75,24 +86,25 @@ public class TargetFinder : MonoBehaviour
         SetTargetUnit();
     }
 
-    public void TryChangeStateToAttack()
+    public void TryChangeStateToPrepare()
     {
         if (nearestUnit != null)
         {
             if (distanceToUnit - nearestUnit.UnitParameters.ModelRadius <= thisUnit.UnitParameters.StartAttackDistance)
             {
-                thisUnit.SetState(UnitStateType.Attack);
+                thisUnit.SetState(UnitStateType.Prepare);
                 Debug.Log(gameObject.name);
             }
-
+           
         }
-        else if(nearestTower != null)
+        if(nearestTower != null)
         {
             if (distanceToTower - nearestTower.TowerRadius <= thisUnit.UnitParameters.StartAttackDistance)
             {
-                thisUnit.SetState(UnitStateType.Attack);
-                Debug.Log(gameObject.name);
+                thisUnit.SetState(UnitStateType.Prepare);
+                Debug.Log(gameObject.name);  
             }
+           
         }
     }
     public void TryChangeStateToChase()
@@ -105,10 +117,16 @@ public class TargetFinder : MonoBehaviour
                 Debug.Log(gameObject.name);
             }
         }
-    }
 
+    }
+    
     public void ChangeStateToDefault()
     {
         thisUnit.SetState(UnitStateType.Default);
+    }
+
+    public void ChangeStateToAttack()
+    {
+        thisUnit.SetState(UnitStateType.Attack);
     }
 }

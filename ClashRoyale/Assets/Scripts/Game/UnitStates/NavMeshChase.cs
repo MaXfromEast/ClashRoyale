@@ -20,7 +20,8 @@ public class NavMeshChase : UnitState
     }
     public override void Init()
     {
-        targetUnit = targetFinder.GetTargetUnit();
+        targetUnit = targetFinder.GetTargetUnit(out float distanceToUnit);
+        agent.SetDestination(targetUnit.transform.position);
     }
 
     public override void Run()
@@ -30,9 +31,8 @@ public class NavMeshChase : UnitState
             targetFinder.ChangeStateToDefault();
         }
         else
-        {
-            agent.SetDestination(targetUnit.transform.position);
-            targetFinder.TryChangeStateToAttack();
+        { 
+            targetFinder.TryChangeStateToPrepare();
         }
         //{
         //    float distanceToTarget = Vector3.Distance(unit.transform.position, targetUnit.transform.position);

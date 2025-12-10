@@ -28,5 +28,7 @@ public enum UnitStateType
     None = 0,
     Default = 1,
     Chase = 2,
-    Attack = 3
+    Prepare = 3,
+    Attack = 4
+
 }

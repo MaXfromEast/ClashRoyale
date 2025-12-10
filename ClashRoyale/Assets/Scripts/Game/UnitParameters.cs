@@ -65,12 +65,12 @@ public class UnitParameters : MonoBehaviour
         }
     }
 
-    [SerializeField] private float maxDelayFirstHit = 0.1f;
-    public float DelayFirstHit
+    [SerializeField] private float maxTimeForPrepare = 0.5f;
+    public float TimeForPrepare
     {
         get
         {
-            return Random.Range(0, maxDelayFirstHit);
+            return Random.Range(0, maxTimeForPrepare);
         }
     }
 }

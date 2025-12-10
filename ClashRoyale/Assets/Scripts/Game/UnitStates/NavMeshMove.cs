@@ -17,22 +17,27 @@ public class NavMeshMove : UnitState
         agent = this.unit.GetComponent<NavMeshAgent>();
         targetFinder = this.unit.GetComponent<TargetFinder>();
         if (agent == null) Debug.LogError($"На персонаже {_unit.name} нет компонента NavMeshAgent");
-        //agent.stoppingDistance = unit.UnitParameters.StartAttackDistance;
-        //agent.speed = unit.UnitParameters.Speed;
-        //agent.radius = unit.UnitParameters.ModelRadius;
+        agent.stoppingDistance = unit.UnitParameters.StartAttackDistance;
+        agent.speed = unit.UnitParameters.Speed;
+        agent.radius = unit.UnitParameters.ModelRadius;
     }
 
     public override void Init()
     {
-        targetTower = targetFinder.GetTargetTower();
-        targetUnit = targetFinder.GetTargetUnit();
+        targetTower = targetFinder.GetTargetTower(out float distanceToTower);
+        targetUnit = targetFinder.GetTargetUnit(out float distanceToUnit);
         agent.SetDestination(targetTower.transform.position);
     }
 
     public override void Run()
     {
+
+       if(targetTower == null)
+       {
+            Init();
+       }
        targetFinder.TryChangeStateToChase();
-       targetFinder.TryChangeStateToAttack();
+       targetFinder.TryChangeStateToPrepare();
     }
 
     //public bool TryAttackTower()
