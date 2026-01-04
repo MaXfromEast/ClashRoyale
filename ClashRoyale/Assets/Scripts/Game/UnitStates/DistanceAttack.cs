@@ -20,6 +20,7 @@ public class DistaceAttack : UnitState
     private Transform thisUnitTransform;
     private float distanceToUnit;
     private float distanceToTower;
+    private ListOfClips listOfClips;
 
     public override void Constructor(Unit _unit)
     {
@@ -33,6 +34,8 @@ public class DistaceAttack : UnitState
         {
             bowstringAnchorPoint = humanArcherController.bowstringAnchorPoint;
         }
+        listOfClips = this.unit.GetComponentInChildren<ListOfClips>();
+        listOfClips.Init();
     }
 
    
@@ -59,6 +62,7 @@ public class DistaceAttack : UnitState
                
                 if(humanArcherController != null)
                 {
+                   
                     MakeProjectile();
                 }
                 TryFindTarget();

@@ -14,6 +14,7 @@ public class MeleeAttack : UnitState
     private Tower targetTower;
     private float distanceToTower;
     private float distanceToUnit;
+    private ListOfClips listOfClips;
 
 
     public override void Constructor(Unit _unit)
@@ -22,7 +23,8 @@ public class MeleeAttack : UnitState
         agent = this.unit.GetComponent<NavMeshAgent>();
         delayBetweenAttacks = unit.UnitParameters.DelayBetweenAttacks;
         targetFinder = this.unit.GetComponent<TargetFinder>();
-       
+        listOfClips = this.unit.GetComponentInChildren<ListOfClips>();
+        listOfClips.Init();
     }
 
    
